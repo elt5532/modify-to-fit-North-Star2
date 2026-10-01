@@ -1,124 +1,448 @@
-<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetMatch: Which Pet Is Right for You?</title>
+    <style>
+        :root {
+            --bg-cream: #FDF8F2;
+            --primary-peach: #FF8C66;
+            --primary-peach-hover: #E87A55;
+            --accent-teal: #428C8A;
+            --accent-teal-light: #EBF5F5;
+            --text-dark: #2D3748;
+            --text-muted: #64748B;
+            --card-bg: #FFFFFF;
+            --border-radius: 20px;
+        }
 
-Learn how to code this game step-by-step on YouTube:
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-https://www.youtube.com/watch?v=2q5EufbUEQk
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-Follow me on 𝕏 for more: https://twitter.com/HunorBorbely
+        .app-container {
+            width: 100%;
+            max-width: 540px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            padding: 32px 24px;
+            position: relative;
+            overflow: hidden;
+        }
 
--->
+        /* Header & Progress Bar */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
 
-<canvas id="game"></canvas>
+        .brand-title {
+            color: var(--primary-peach);
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
 
-<svg width="200" height="250" id="windmill">
-  <defs>
-    <path id="arm" d="M -7 -20 C -7 -10 7 -10 7 -20 L 2 -80 L -2 -80" />
-  </defs>
-  <g transform="translate(100, 100)">
-    <g id="windmill-head">
-      <circle r="8"></circle>
-      <use href="#arm" />
-      <use href="#arm" transform="rotate(+120)" />
-      <use href="#arm" transform="rotate(-120)" />
-    </g>
-  </g>
-  <path
-    transform="translate(100, 0)"
-    d="M -7 250 L 7 250 L 3 115 L -3 115"
-  ></path>
-</svg>
+        .brand-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
 
-<div id="wind-info">Wind Speed: <span id="wind-speed">0</span></div>
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #F1F5F9;
+            border-radius: 4px;
+            margin-bottom: 28px;
+            overflow: hidden;
+            display: none;
+        }
 
-<div id="info-left">
-  <h3><span class="name">Player</span></h3>
-  <p>Angle: <span class="angle">0</span>°</p>
-  <p>Velocity: <span class="velocity">0</span></p>
-</div>
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-teal);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
 
-<div id="info-right">
-  <h3><span class="name">Computer</span></h3>
-  <p>Angle: <span class="angle">0</span>°</p>
-  <p>Velocity: <span class="velocity">0</span></p>
-</div>
+        /* Screens */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
 
-<div id="instructions">
-  <h3 id="game-mode">Player vs. Computer</h3>
-  <h1>Drag the bomb to aim!</h1>
-</div>
+        .screen.active {
+            display: block;
+        }
 
-<div id="bomb-grab-area"></div>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-<div id="congratulations">
-  <h1><span id="winner">?</span> won!</h1>
-  <p>
-    Learn How to Code This Game with Plain JavaScript and HTML Canvas on
-    <a href="https://youtu.be/2q5EufbUEQk?si=w2Himy4oN99AQeks" target="_top"
-      >YouTube</a
-    >!
-  </p>
-  <p>
-    Say hello
-    <a href="https://twitter.com/HunorBorbely" target="_top">@HunorBorbely</a
-    >.
-  </p>
-  <div class="dropdown">
-    <button class="dropbtn">New Game</button>
-    <div class="dropdown-content">
-      <a href="#" class="single-player">Single Player</a>
-      <a href="#" class="two-players">Two-Player</a>
-      <a href="#" class="auto-play">Autoplay</a>
+        /* Start Screen */
+        .hero-img {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            background-color: var(--accent-teal-light);
+        }
+
+        .start-screen h1 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .start-screen p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        /* Quiz Screen */
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: var(--bg-cream);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-teal);
+            background: var(--accent-teal-light);
+            transform: translateY(-2px);
+        }
+
+        /* Results Screen */
+        .match-badge {
+            display: inline-block;
+            background-color: var(--accent-teal-light);
+            color: var(--accent-teal);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .result-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pet-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px auto;
+            border: 4px solid var(--primary-peach);
+        }
+
+        .pet-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .pet-type {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .pet-tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background: #F1F5F9;
+            color: var(--text-dark);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .result-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        /* Action Buttons */
+        .btn-primary {
+            width: 100%;
+            background-color: var(--primary-peach);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-peach-hover);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background-color: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-secondary:hover {
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="brand-header">
+        <div class="brand-title">PetMatch</div>
+        <div class="brand-subtitle">Which Rescue Pet Fits Your Lifestyle?</div>
     </div>
-  </div>
-</div>
 
-<div id="settings">
-  <div class="dropdown">
-    <button class="dropbtn">New Game</button>
-    <div class="dropdown-content">
-      <a href="#" class="single-player">Single Player</a>
-      <a href="#" class="two-players">Two-Players</a>
-      <a href="#" class="auto-play">Autoplay</a>
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
     </div>
-  </div>
 
-  <button id="color-mode">Dark Mode</button>
+    <!-- START SCREEN -->
+    <div class="screen active" id="startScreen">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80" alt="Happy rescue dog" class="hero-img">
+        <div class="start-screen">
+            <h1>Every Pet Deserves a Forever Home</h1>
+            <p>Adopting a pet is a life-changing journey. Take this quick 4-question lifestyle quiz to discover which rescue companion aligns with your space, schedule, and experience!</p>
+            <button class="btn-primary" onclick="startQuiz()">Find My Pet Match</button>
+        </div>
+    </div>
 
-  <a
-    id="youtube"
-    href="https://youtu.be/2q5EufbUEQk?si=w2Himy4oN99AQeks"
-    target="_top" 
-  >
-    <span>See how this game was made</span>
-  </a>
-  <div id="youtube-card">
-    Learn How to Code This Game with Plain JavaScript and HTML Canvas
-  </div>
+    <!-- QUIZ SCREEN -->
+    <div class="screen" id="quizScreen">
+        <div class="question-title" id="questionTitle">Question Text</div>
+        <div class="options-list" id="optionsList"></div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="screen" id="resultScreen">
+        <div style="text-align: center;">
+            <span class="match-badge">Your Best Match</span>
+        </div>
+        <div class="result-card">
+            <img id="petImg" src="" alt="Matched Pet" class="pet-avatar">
+            <div class="pet-name" id="petName">Pet Name</div>
+            <div class="pet-type" id="petType">Category</div>
+            <div class="pet-tags" id="petTags"></div>
+            <div class="result-description" id="petDescription">Description goes here.</div>
+        </div>
+        <button class="btn-primary" onclick="alert('Thank you for supporting rescue animals! Connect this button to your shelter page.')">Meet Adoption Candidates</button>
+        <button class="btn-secondary" onclick="restartQuiz()">Retake Quiz</button>
+    </div>
 </div>
 
-<button id="fullscreen" onclick="toggleFullscreen()">
-  <svg width="30" height="30">
-    <path
-          id="enter-fullscreen"
-          stroke="white"
-          stroke-width="3"
-          fill="none"
-          d="
-             M 10, 2 L 2,2 L 2, 10
-             M 20, 2 L 28,2 L 28, 10
-             M 28, 20 L 28,28 L 20, 28
-             M 10, 28 L 2,28 L 2, 20"
-          />
-    <path
-          id="exit-fullscreen"
-          stroke="transparent"
-          stroke-width="3"
-          fill="none"
-          d="
-             M 10, 2 L 10,10 L 2, 10
-             M 20, 2 L 20,10 L 28, 10
-             M 28, 20 L 20,20 L 20, 28
-             M 10, 28 L 10,20 L 2, 20"
-          />
-  </svg>
-</button>
+<script>
+    const questions = [
+        {
+            title: "What is your current living environment?",
+            options: [
+                { text: "Apartment or condo (limited space)", value: "cat_chill" },
+                { text: "House with a fenced yard", value: "dog_active" },
+                { text: "Shared housing or studio", value: "cat_playful" },
+                { text: "Quiet space with no yard", value: "dog_chill" }
+            ]
+        },
+        {
+            title: "How much daily free time can you dedicate to exercise & care?",
+            options: [
+                { text: "30–45 mins (quick walks & cuddle time)", value: "dog_chill" },
+                { text: "1–2 hours (active walks & daily play)", value: "cat_playful" },
+                { text: "2+ hours (hiking, running, high energy)", value: "dog_active" },
+                { text: "Flexible/Minimal (independent companion)", value: "cat_chill" }
+            ]
+        },
+        {
+            title: "What is your experience level with pets?",
+            options: [
+                { text: "First-time owner looking for a smooth start", value: "cat_chill" },
+                { text: "Some experience with easygoing companions", value: "dog_chill" },
+                { text: "Experienced owner ready for training & play", value: "dog_active" },
+                { text: "Love interactive personalities and indoor fun", value: "cat_playful" }
+            ]
+        },
+        {
+            title: "What vibe do you look for in a pet?",
+            options: [
+                { text: "A calm, affectionate couch buddy", value: "cat_chill" },
+                { text: "An adventurous outdoor partner", value: "dog_active" },
+                { text: "A gentle, loyal friend for relaxed walks", value: "dog_chill" },
+                { text: "A playful, curious, and entertaining friend", value: "cat_playful" }
+            ]
+        }
+    ];
+
+    const petResults = {
+        dog_active: {
+            name: "Milo & Active Pups",
+            type: "High-Energy Rescue Dog",
+            img: "https://images.unsplash.com/photo-1534361960057-19889db98d18?auto=format&fit=crop&w=400&q=80",
+            tags: ["Adventurous", "Playful", "Loves Hiking"],
+            description: "Your active lifestyle and spacious living arrangement make you a perfect fit for a energetic rescue dog like Milo! High-energy dogs love outdoor adventures, training games, and running."
+        },
+        dog_chill: {
+            name: "Barnaby & Gentle Giants",
+            type: "Senior or Calm Rescue Dog",
+            img: "https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=400&q=80",
+            tags: ["Calm", "Loyal", "Gentle Walk Companion"],
+            description: "You prefer a relaxed companion! A senior rescue dog or low-energy mix like Barnaby would thrive in your care. They ask for cozy naps, warm affection, and peaceful daily strolls."
+        },
+        cat_playful: {
+            name: "Cleo & Playful Felines",
+            type: "Interactive & Young Cat",
+            img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80",
+            tags: ["Curious", "Interactive", "Full of Energy"],
+            description: "You have plenty of indoor enthusiasm to share! Playful rescue cats like Cleo love puzzle toys, climbing towers, and engaging playtime without requiring a large backyard."
+        },
+        cat_chill: {
+            name: "Luna & Easygoing Cats",
+            type: "Independent Rescue Cat",
+            img: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=400&q=80",
+            tags: ["Independent", "Cuddle Bug", "Apartment-Friendly"],
+            description: "An easygoing cat like Luna is your ideal match! Perfect for first-time owners or compact spaces, quiet rescue cats offer affectionate companionship and effortless care routines."
+        }
+    };
+
+    let currentQuestion = 0;
+    let scores = { dog_active: 0, dog_chill: 0, cat_playful: 0, cat_chill: 0 };
+
+    function startQuiz() {
+        document.getElementById("startScreen").classList.remove("active");
+        document.getElementById("quizScreen").classList.add("active");
+        document.getElementById("progressContainer").style.display = "block";
+        currentQuestion = 0;
+        scores = { dog_active: 0, dog_chill: 0, cat_playful: 0, cat_chill: 0 };
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById("questionTitle").innerText = q.title;
+        
+        const optionsList = document.getElementById("optionsList");
+        optionsList.innerHTML = "";
+
+        q.options.forEach(option => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerHTML = `<span>${option.text}</span> <span>→</span>`;
+            btn.onclick = () => selectOption(option.value);
+            optionsList.appendChild(btn);
+        });
+
+        const progressPercent = ((currentQuestion + 1) / questions.length) * 100;
+        document.getElementById("progressBar").style.width = `${progressPercent}%`;
+    }
+
+    function selectOption(val) {
+        scores[val] += 1;
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+            renderQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("quizScreen").classList.remove("active");
+        document.getElementById("progressContainer").style.display = "none";
+        document.getElementById("resultScreen").classList.add("active");
+
+        // Determine highest scoring category
+        const topMatch = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+        const resultData = petResults[topMatch];
+
+        document.getElementById("petImg").src = resultData.img;
+        document.getElementById("petName").innerText = resultData.name;
+        document.getElementById("petType").innerText = resultData.type;
+        document.getElementById("petDescription").innerText = resultData.description;
+
+        const tagsContainer = document.getElementById("petTags");
+        tagsContainer.innerHTML = "";
+        resultData.tags.forEach(tag => {
+            const span = document.createElement("span");
+            span.className = "tag";
+            span.innerText = tag;
+            tagsContainer.appendChild(span);
+        });
+    }
+
+    function restartQuiz() {
+        document.getElementById("resultScreen").classList.remove("active");
+        document.getElementById("startScreen").classList.add("active");
+    }
+</script>
+
+</body>
+</html>
