@@ -425,11 +425,15 @@ class ToyItem {
       ctx.beginPath(); ctx.arc(0, 0, 9, 0.4, 2.6); ctx.stroke();
 
     } else if (this.type === 'bone') {
-      ctx.fillStyle = '#FFFFFF'
-      ctx.fillRect(-12, -4, 24, 8);
-      ctx.beginPath();
-      ctx.arc(-12, -5, 5, 0, Math.PI * 2); ctx.arc(-12, 5, 5, 0, Math.PI * 2);
-      ctx.arc(12, -5, 5, 0, Math.PI * 2); ctx.arc(12, 5, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(-12, -4, 24, 8);
+    ctx.beginPath();
+    ctx.arc(-12, -5, 5, 0, Math.PI * 2); 
+    ctx.arc(-12, 5, 5, 0, Math.PI * 2);
+    ctx.arc(12, -5, 5, 0, Math.PI * 2); 
+    ctx.arc(12, 5, 5, 0, Math.PI * 2);
+    ctx.fill();
+}
      
 
     } else if (this.type === 'yarn') {
