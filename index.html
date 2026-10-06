@@ -1,172 +1,344 @@
 <!DOCTYPE html>
+
 <html lang="en" class="h-full">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PetMatch: Full Room Playground</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            indigo: '#313A70',
-            mustard: '#FFB300',
-            rose: '#C9888F',
-            mint: '#AFE2CF',
-            terracotta: '#C3684D',
-            charcoal: '#3D3D3D',
-            cream: '#FBF7F1',
-            grey: '#98A1A6',
-            wallTan: '#F7E9C6'
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Fredoka', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PetMatch: Full Room Playground</title>
+
+  
+
+  <!-- Tailwind CSS CDN -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  
+
+  <!-- Font Awesome Icons -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  
+
+  <!-- Google Fonts -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+  <!-- Custom Styles -->
+
+  <link rel="stylesheet" href="style.css">
+
+
+
+  <script>
+
+    tailwind.config = {
+
+      theme: {
+
+        extend: {
+
+          colors: {
+
+            indigo: '#313A70',
+
+            mustard: '#FFB300',
+
+            rose: '#C9888F',
+
+            mint: '#AFE2CF',
+
+            terracotta: '#C3684D',
+
+            charcoal: '#3D3D3D',
+
+            cream: '#FBF7F1',
+
+            grey: '#98A1A6',
+
+            wallTan: '#F7E9C6'
+
+          },
+
+          fontFamily: {
+
+            sans: ['Inter', 'sans-serif'],
+
+            display: ['Fredoka', 'sans-serif']
+
+          }
+
+        }
+
+      }
+
+    }
+
+  </script>
+
 </head>
+
 <body class="h-full flex flex-col justify-between text-charcoal bg-indigo overflow-hidden">
 
-  <!-- Header Navigation -->
-  <header class="bg-cream/95 backdrop-blur border-b-4 border-mustard px-4 py-2.5 sm:px-6 flex justify-between items-center shadow-lg z-20">
-    <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-full bg-terracotta flex items-center justify-center text-white text-xl font-bold shadow-md">
-        <i class="fa-solid fa-paw text-mustard"></i>
-      </div>
-      <div>
-        <h1 class="font-display font-bold text-lg sm:text-xl text-indigo leading-tight">PetMatch: Full Room Playground</h1>
-        <p class="text-xs text-terracotta font-semibold hidden sm:block">Interactive 2.5D Co-Play Experience</p>
-      </div>
-    </div>
 
-    <!-- Sound & Reset Controls -->
-    <div class="flex items-center space-x-2 sm:space-x-3">
-      <button id="soundToggle" class="bg-mint hover:bg-opacity-80 text-indigo font-semibold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center space-x-1.5 transition shadow">
-        <i id="soundIcon" class="fa-solid fa-volume-high"></i>
-        <span id="soundLabel" class="hidden sm:inline">Sound: ON</span>
-      </button>
 
-      <button id="clearRoomBtn" class="bg-rose hover:bg-opacity-90 text-white font-semibold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center space-x-1.5 transition shadow">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span>Reset Pets</span>
-      </button>
-    </div>
-  </header>
+  <!-- Header Navigation -->
 
-  <!-- Main Canvas Playfield -->
-  <main class="relative flex-1 w-full bg-cream overflow-hidden flex flex-col items-center justify-center">
-    
-    <!-- Top HUD Floating Status Overlay -->
-    <div class="absolute top-3 left-4 right-4 z-10 flex flex-wrap gap-2 justify-between pointer-events-none">
-      
-      <!-- Dog Happiness Card -->
-      <div class="bg-white/95 backdrop-blur border-2 border-mustard rounded-2xl p-2 sm:p-2.5 shadow-lg flex items-center space-x-2.5 pointer-events-auto min-w-[150px] sm:min-w-[190px]">
-        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-mustard/20 border-2 border-mustard flex items-center justify-center text-lg sm:text-2xl text-terracotta">
-          🐶
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-center mb-0.5">
-            <span class="font-display font-bold text-xs sm:text-sm text-indigo">Barnaby</span>
-            <span id="dogActionTag" class="text-[10px] font-bold text-terracotta bg-mustard/20 px-1.5 py-0.5 rounded-full">Roaming</span>
-          </div>
-          <div class="w-full bg-slate-200 h-2 sm:h-2.5 rounded-full overflow-hidden border border-slate-300">
-            <div id="dogHappyBar" class="bg-mustard h-full transition-all duration-300 w-4/5"></div>
-          </div>
-        </div>
-      </div>
+  <header class="bg-cream/95 backdrop-blur border-b-4 border-mustard px-4 py-2.5 sm:px-6 flex justify-between items-center shadow-lg z-20">
 
-      <!-- Center Dynamic Banner -->
-      <div id="actionBanner" class="bg-indigo text-white px-3.5 py-1.5 rounded-2xl shadow-xl border-2 border-mint text-xs sm:text-sm font-medium flex items-center space-x-2 transition-all">
-        <i id="actionBannerIcon" class="fa-solid fa-face-smile text-mustard"></i>
-        <span id="actionBannerText">Barnaby & Mimi are freely exploring the room!</span>
-      </div>
+    <div class="flex items-center space-x-3">
 
-      <!-- Cat Happiness Card -->
-      <div class="bg-white/95 backdrop-blur border-2 border-rose rounded-2xl p-2 sm:p-2.5 shadow-lg flex items-center space-x-2.5 pointer-events-auto min-w-[150px] sm:min-w-[190px]">
-        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-rose/20 border-2 border-rose flex items-center justify-center text-lg sm:text-2xl text-rose">
-          🐱
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-center mb-0.5">
-            <span class="font-display font-bold text-xs sm:text-sm text-indigo">Mimi</span>
-            <span id="catActionTag" class="text-[10px] font-bold text-rose bg-rose/20 px-1.5 py-0.5 rounded-full">Exploring</span>
-          </div>
-          <div class="w-full bg-slate-200 h-2 sm:h-2.5 rounded-full overflow-hidden border border-slate-300">
-            <div id="catHappyBar" class="bg-rose h-full transition-all duration-300 w-3/4"></div>
-          </div>
-        </div>
-      </div>
+      <div class="w-10 h-10 rounded-full bg-terracotta flex items-center justify-center text-white text-xl font-bold shadow-md">
 
-    </div>
+        <i class="fa-solid fa-paw text-mustard"></i>
 
-    <!-- The 2.5D Game Canvas -->
-    <canvas id="gameCanvas" class="w-full h-full cursor-crosshair block"></canvas>
-  </main>
+      </div>
 
-  <!-- Toy Toolbar Footer -->
-  <footer class="bg-indigo border-t-4 border-terracotta p-2 sm:p-3 z-20 shadow-2xl">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-      
-      <!-- Dog Toys Toolbar -->
-      <div class="flex items-center space-x-2 w-full md:w-auto justify-center">
-        <span class="font-display text-white text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5">
-          <i class="fa-solid fa-dog text-mustard"></i> Dog Toys:
-        </span>
-        <div class="flex space-x-1.5">
-          <button data-toy="ball" class="toy-btn active-toy bg-cream text-indigo border-2 border-mustard px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🎾 Ball</span>
-          </button>
-          <button data-toy="bone" class="toy-btn bg-cream text-indigo border-2 border-mustard px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🦴 Bone</span>
-          </button>
-          <button data-toy="rope" class="toy-btn bg-cream text-indigo border-2 border-mustard px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🪢 Tug Rope</span>
-          </button>
-        </div>
-      </div>
+      <div>
 
-      <!-- Cat Toys Toolbar -->
-      <div class="flex items-center space-x-2 w-full md:w-auto justify-center">
-        <span class="font-display text-white text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5">
-          <i class="fa-solid fa-cat text-rose"></i> Cat Toys:
-        </span>
-        <div class="flex space-x-1.5">
-          <button data-toy="laser" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🔴 Laser</span>
-          </button>
-          <button data-toy="wand" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🪶 Wand</span>
-          </button>
-          <button data-toy="yarn" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🧶 Yarn</span>
-          </button>
-          <button data-toy="mouse" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
-            <span>🐭 Mouse</span>
-          </button>
-        </div>
-      </div>
+        <h1 class="font-display font-bold text-lg sm:text-xl text-indigo leading-tight">PetMatch: Full Room Playground</h1>
 
-    </div>
-  </footer>
+        <p class="text-xs text-terracotta font-semibold hidden sm:block">Interactive 2.5D Co-Play Experience</p>
 
-  <script src="script.js"></script>
+      </div>
+
+    </div>
+
+
+
+    <!-- Sound & Reset Controls -->
+
+    <div class="flex items-center space-x-2 sm:space-x-3">
+
+      <button id="soundToggle" class="bg-mint hover:bg-opacity-80 text-indigo font-semibold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center space-x-1.5 transition shadow">
+
+        <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+
+        <span id="soundLabel" class="hidden sm:inline">Sound: ON</span>
+
+      </button>
+
+
+
+      <button id="clearRoomBtn" class="bg-rose hover:bg-opacity-90 text-white font-semibold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center space-x-1.5 transition shadow">
+
+        <i class="fa-solid fa-rotate-left"></i>
+
+        <span>Reset Pets</span>
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- Main Canvas Playfield -->
+
+  <main class="relative flex-1 w-full bg-cream overflow-hidden flex flex-col items-center justify-center">
+
+    
+
+    <!-- Top HUD Floating Status Overlay -->
+
+    <div class="absolute top-3 left-4 right-4 z-10 flex flex-wrap gap-2 justify-between pointer-events-none">
+
+      
+
+      <!-- Dog Happiness Card -->
+
+      <div class="bg-white/95 backdrop-blur border-2 border-mustard rounded-2xl p-2 sm:p-2.5 shadow-lg flex items-center space-x-2.5 pointer-events-auto min-w-[150px] sm:min-w-[190px]">
+
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-mustard/20 border-2 border-mustard flex items-center justify-center text-lg sm:text-2xl text-terracotta">
+
+          🐶
+
+        </div>
+
+        <div class="flex-1">
+
+          <div class="flex justify-between items-center mb-0.5">
+
+            <span class="font-display font-bold text-xs sm:text-sm text-indigo">Barnaby</span>
+
+            <span id="dogActionTag" class="text-[10px] font-bold text-terracotta bg-mustard/20 px-1.5 py-0.5 rounded-full">Roaming</span>
+
+          </div>
+
+          <div class="w-full bg-slate-200 h-2 sm:h-2.5 rounded-full overflow-hidden border border-slate-300">
+
+            <div id="dogHappyBar" class="bg-mustard h-full transition-all duration-300 w-4/5"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Center Dynamic Banner -->
+
+      <div id="actionBanner" class="bg-indigo text-white px-3.5 py-1.5 rounded-2xl shadow-xl border-2 border-mint text-xs sm:text-sm font-medium flex items-center space-x-2 transition-all">
+
+        <i id="actionBannerIcon" class="fa-solid fa-face-smile text-mustard"></i>
+
+        <span id="actionBannerText">Barnaby & Mimi are freely exploring the room!</span>
+
+      </div>
+
+
+
+      <!-- Cat Happiness Card -->
+
+      <div class="bg-white/95 backdrop-blur border-2 border-rose rounded-2xl p-2 sm:p-2.5 shadow-lg flex items-center space-x-2.5 pointer-events-auto min-w-[150px] sm:min-w-[190px]">
+
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-rose/20 border-2 border-rose flex items-center justify-center text-lg sm:text-2xl text-rose">
+
+          🐱
+
+        </div>
+
+        <div class="flex-1">
+
+          <div class="flex justify-between items-center mb-0.5">
+
+            <span class="font-display font-bold text-xs sm:text-sm text-indigo">Mimi</span>
+
+            <span id="catActionTag" class="text-[10px] font-bold text-rose bg-rose/20 px-1.5 py-0.5 rounded-full">Exploring</span>
+
+          </div>
+
+          <div class="w-full bg-slate-200 h-2 sm:h-2.5 rounded-full overflow-hidden border border-slate-300">
+
+            <div id="catHappyBar" class="bg-rose h-full transition-all duration-300 w-3/4"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+
+
+    <!-- The 2.5D Game Canvas -->
+
+    <canvas id="gameCanvas" class="w-full h-full cursor-crosshair block"></canvas>
+
+  </main>
+
+
+
+  <!-- Toy Toolbar Footer -->
+
+  <footer class="bg-indigo border-t-4 border-terracotta p-2 sm:p-3 z-20 shadow-2xl">
+
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+
+      
+
+      <!-- Dog Toys Toolbar -->
+
+      <div class="flex items-center space-x-2 w-full md:w-auto justify-center">
+
+        <span class="font-display text-white text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5">
+
+          <i class="fa-solid fa-dog text-mustard"></i> Dog Toys:
+
+        </span>
+
+        <div class="flex space-x-1.5">
+
+          <button data-toy="ball" class="toy-btn active-toy bg-cream text-indigo border-2 border-mustard px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🎾 Ball</span>
+
+          </button>
+
+          <button data-toy="bone" class="toy-btn bg-cream text-indigo border-2 border-mustard px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🦴 Bone</span>
+
+          </button>
+
+          <button data-toy="rope" class="toy-btn bg-cream text-indigo border-2 border-mustard px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🪢 Tug Rope</span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Cat Toys Toolbar -->
+
+      <div class="flex items-center space-x-2 w-full md:w-auto justify-center">
+
+        <span class="font-display text-white text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5">
+
+          <i class="fa-solid fa-cat text-rose"></i> Cat Toys:
+
+        </span>
+
+        <div class="flex space-x-1.5">
+
+          <button data-toy="laser" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🔴 Laser</span>
+
+          </button>
+
+          <button data-toy="wand" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🪶 Wand</span>
+
+          </button>
+
+          <button data-toy="yarn" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🧶 Yarn</span>
+
+          </button>
+
+          <button data-toy="mouse" class="toy-btn-cat bg-cream text-indigo border-2 border-rose px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 transition shadow">
+
+            <span>🐭 Mouse</span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </footer>
+
+
+
+  <script src="script.js"></script>
+
 </body>
-</html>
+
+</html> 
+
