@@ -57,8 +57,13 @@
       </div>
     </div>
 
-    <!-- Sound & Reset Controls -->
+    <!-- Sound, Light & Reset Controls -->
     <div class="flex items-center space-x-2 sm:space-x-3">
+      <button id="lightToggle" class="bg-mustard hover:bg-opacity-90 text-indigo font-semibold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center space-x-1.5 transition shadow">
+        <i id="lightIcon" class="fa-solid fa-lightbulb text-indigo"></i>
+        <span id="lightLabel" class="hidden sm:inline">Light: ON</span>
+      </button>
+
       <button id="soundToggle" class="bg-mint hover:bg-opacity-80 text-indigo font-semibold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center space-x-1.5 transition shadow">
         <i id="soundIcon" class="fa-solid fa-volume-high"></i>
         <span id="soundLabel" class="hidden sm:inline">Sound: ON</span>
