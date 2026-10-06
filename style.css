@@ -23,7 +23,7 @@ canvas {
 
 .toy-btn-cat.active-toy {
   border-color: #C9888F !important;
-  background-color: #C9888F !important;
+  background-color: #f9f3ea !important;
   color: #FFFFFF !important;
   transform: scale(1.05);
   box-shadow: 0 4px 14px rgba(201, 136, 143, 0.45);
